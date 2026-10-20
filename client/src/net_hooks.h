@@ -3,6 +3,8 @@
 #ifndef AE_NET_HOOKS_H
 #define AE_NET_HOOKS_H
 
+#include "../client.h"
+
 #include <stdint.h>
 
 // Inicializar red
@@ -27,7 +29,6 @@ void ae_net_hook_enemy_update(void);
 void ae_net_hook_items_update(void);
 
 // Obtener cliente de red
-struct AeNetClient;
-struct AeNetClient *ae_net_hooks_get_client(void);
+AeNetClient *ae_net_hooks_get_client(void);
 
 #endif // AE_NET_HOOKS_H

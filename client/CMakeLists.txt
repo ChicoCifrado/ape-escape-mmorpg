@@ -82,5 +82,6 @@ target_link_libraries(ae_mmorpg_client
 # Definiciones
 target_compile_definitions(ae_mmorpg_client PRIVATE
     AE_MMORPG_CLIENT=1
+    AE_NET_CLIENT=1
     AE_NET_ENABLED=1
 )
