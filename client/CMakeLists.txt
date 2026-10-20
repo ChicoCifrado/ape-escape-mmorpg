@@ -26,8 +26,11 @@ file(GLOB_RECURSE CLIENT_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
 )
 
-# Excluir game_viewer.c (tiene includes relativos incompatibles)
-list(REMOVE_ITEM CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/game_viewer.c")
+# Excluir game_client_main.c (usamos game_viewer.c como main)
+list(REMOVE_ITEM CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/game_client_main.c")
+
+# Excluir game_viewer.c (tiene includes relativos incompatibles cuando en client/src/)
+# (ahora está en decomp/src/app/ y se incluye via DECOMP_ALL_SOURCES)
 
 # Librería de red
 set(NET_SOURCES
