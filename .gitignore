@@ -1,0 +1,15 @@
+# Binarios
+client/client
+server/server
+*.o
+*.a
+
+# Datos de runtime
+server/accounts.dat
+
+# Build
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.bak
