@@ -12,9 +12,13 @@ set(PROTOCOL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../protocol")
 
 # Incluir directorios
 include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${DECOMP_DIR}/src
     ${PROTOCOL_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../shared
+    ${CMAKE_CURRENT_SOURCE_DIR}/../protocol
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
 # Fuentes del cliente
@@ -22,43 +26,42 @@ file(GLOB_RECURSE CLIENT_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
 )
 
-# Fuentes del decomp (seleccionadas)
-# Nota: en la version completa, incluir todos los modulos del decomp
-# Por ahora, solo los modulos necesarios para el prototipo
-set(DECOMP_SOURCES
-    ${DECOMP_DIR}/src/core/ae_ram.c
-    ${DECOMP_DIR}/src/core/ae_pad.c
-    ${DECOMP_DIR}/src/player/ae_playerupdate.c
-    ${DECOMP_DIR}/src/player/ae_playerupdate_frame.c
-    ${DECOMP_DIR}/src/player/ae_player_act.c
-    ${DECOMP_DIR}/src/player/ae_player_cond.c
-    ${DECOMP_DIR}/src/player/ae_player_spawn.c
-    ${DECOMP_DIR}/src/monkeys/ae_monkey_base.c
-    ${DECOMP_DIR}/src/monkeys/ae_monkey_level1.c
-    ${DECOMP_DIR}/src/camera/ae_camera.c
-    ${DECOMP_DIR}/src/collision/ae_collprobe.c
-    ${DECOMP_DIR}/src/collision/native_collision.c
-    ${DECOMP_DIR}/src/collision/native_ground.c
-    ${DECOMP_DIR}/src/math/ae_sdk.c
-    ${DECOMP_DIR}/src/math/ae_sdk_matrix.c
-    ${DECOMP_DIR}/src/bodies/ae_bodies.c
-    ${DECOMP_DIR}/src/effects/effect_vm.c
-    ${DECOMP_DIR}/src/audio/sp_audio.c
-    ${DECOMP_DIR}/src/text/tl_text.c
-    ${DECOMP_DIR}/src/render/native_prop_draw.c
-    ${DECOMP_DIR}/src/render/native_sky.c
-    ${DECOMP_DIR}/src/indicators/ae_indicators.c
-    ${DECOMP_DIR}/src/world/ae_stage.c
-    ${DECOMP_DIR}/src/game/ae_modes.c
-    ${DECOMP_DIR}/src/game/ae_calls.c
-    ${DECOMP_DIR}/src/game/ae_game_hooks.c
-    ${DECOMP_DIR}/src/app/native_viewer.c
-    ${DECOMP_DIR}/src/app/native_input.c
+# Excluir game_viewer.c (tiene includes relativos incompatibles)
+list(REMOVE_ITEM CLIENT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/game_viewer.c")
+
+# Librería de red
+set(NET_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/../shared/net_lib.c
 )
+
+# Cliente de red
+set(CLIENT_NET_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/client.c
+)
+
+# Fuentes del decomp (todos los .c)
+file(GLOB_RECURSE DECOMP_ALL_SOURCES
+    "${DECOMP_DIR}/src/*.c"
+)
+
+# Excluir archivos con main() o includes incompatibles
+list(REMOVE_ITEM DECOMP_ALL_SOURCES
+    "${DECOMP_DIR}/src/app/native_viewer.c"
+    "${DECOMP_DIR}/src/app/test_input.c"
+    "${DECOMP_DIR}/src/audio/sp_render_wav.c"
+    "${DECOMP_DIR}/src/player/test_body.c"
+    "${DECOMP_DIR}/src/player/test_gadget.c"
+    "${DECOMP_DIR}/src/player/test_player.c"
+    "${DECOMP_DIR}/src/player/test_volume.c"
+)
+
+set(DECOMP_SOURCES ${DECOMP_ALL_SOURCES})
 
 # Ejecutable
 add_executable(ae_mmorpg_client
     ${CLIENT_SOURCES}
+    ${NET_SOURCES}
+    ${CLIENT_NET_SOURCES}
     ${DECOMP_SOURCES}
 )
 
